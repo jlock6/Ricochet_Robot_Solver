@@ -65,33 +65,24 @@ def removeRobot(rows,columns,robot):
 
 	return
 
-def moveUp(rows,columns,robot):
-	x, y = robot
+def moveUp(rows,columns,robots,robot_picker):
+	removeRobot(rows,columns,robots[robot_picker])
 
-	removeRobot(rows,columns,robot)
+	x_new, test_location = robots[robot_picker]
 
-	x_new = x
-	y_new = y
-
-	test_location = y-1
-
-	while columns[x][test_location] == 0:
+	while columns[x_new][test_location-1] == 0:
 		test_location-=1
 
-	y_new = test_location+1
+	robots[robot_picker] = (x_new,test_location)
 
-	robot = (x_new,y_new)
-
-	print robot
-
-	addRobot(rows,columns,robot)
+	addRobot(rows,columns,robots[robot_picker])
 
 	return
 
 for robot in robot_locations:
 	addRobot(row_walls,column_walls,robot)
 
-moveUp(row_walls,column_walls,robot_locations[2])
+moveUp(row_walls,column_walls,robot_locations,2)
 
 for wall in row_walls:
 	print wall
