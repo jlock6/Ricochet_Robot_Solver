@@ -43,8 +43,8 @@ robot_locations[1] = (4,1)
 robot_locations[2] = (2,4)
 robot_locations[3] = (4,5)
 
-def addRobot(rows,columns,location):
-	x, y = location 
+def addRobot(rows,columns,robot):
+	x, y = robot
 
 	rows[y][x-1]+=1
 	rows[y][x]+=1
@@ -54,8 +54,8 @@ def addRobot(rows,columns,location):
 
 	return
 
-def removeRobot(rows,columns,location):
-	x, y = location
+def removeRobot(rows,columns,robot):
+	x, y = robot
 
 	rows[y][x-1]-=1
 	rows[y][x]-=1
@@ -65,8 +65,33 @@ def removeRobot(rows,columns,location):
 
 	return
 
+def moveUp(rows,columns,robot):
+	x, y = robot
+
+	removeRobot(rows,columns,robot)
+
+	x_new = x
+	y_new = y
+
+	test_location = y-1
+
+	while columns[x][test_location] == 0:
+		test_location-=1
+
+	y_new = test_location+1
+
+	robot = (x_new,y_new)
+
+	print robot
+
+	addRobot(rows,columns,robot)
+
+	return
+
 for robot in robot_locations:
 	addRobot(row_walls,column_walls,robot)
+
+moveUp(row_walls,column_walls,robot_locations[2])
 
 for wall in row_walls:
 	print wall
@@ -76,5 +101,8 @@ print "hello"
 for wall in column_walls:
 	print wall
 
+print "hello"
 
+for robot in robot_locations:
+	print robot 
 
