@@ -68,21 +68,63 @@ def removeRobot(rows,columns,robot):
 def moveUp(rows,columns,robots,robot_picker):
 	removeRobot(rows,columns,robots[robot_picker])
 
-	x_new, test_location = robots[robot_picker]
+	x, test_location = robots[robot_picker]
 
-	while columns[x_new][test_location-1] == 0:
+	while columns[x][test_location-1] == 0:
 		test_location-=1
 
-	robots[robot_picker] = (x_new,test_location)
+	robots[robot_picker] = (x,test_location)
 
 	addRobot(rows,columns,robots[robot_picker])
 
 	return
 
+def moveDown(rows,columns,robots,robot_picker):
+	removeRobot(rows,columns,robots[robot_picker])
+
+	x, test_location = robots[robot_picker]
+
+	while columns[x][test_location] == 0:
+		test_location+=1
+
+	robots[robot_picker] = (x,test_location)
+
+	addRobot(rows,columns,robots[robot_picker])
+
+	return
+
+def moveLeft(rows,columns,robots,robot_picker):
+	removeRobot(rows,columns,robots[robot_picker])
+
+	test_location, y = robots[robot_picker]
+
+	while rows[y][test_location-1] == 0:
+		test_location-=1
+
+	robots[robot_picker] = (test_location,y)
+
+	addRobot(rows,columns,robots[robot_picker])
+
+	return	
+
+def moveRight(rows,columns,robots,robot_picker):
+	removeRobot(rows,columns,robots[robot_picker])
+
+	test_location, y = robots[robot_picker]
+
+	while rows[y][test_location] == 0:
+		test_location+=1
+
+	robots[robot_picker] = (test_location,y)
+
+	addRobot(rows,columns,robots[robot_picker])
+
+	return	
+
 for robot in robot_locations:
 	addRobot(row_walls,column_walls,robot)
 
-moveUp(row_walls,column_walls,robot_locations,2)
+moveRight(row_walls,column_walls,robot_locations,2)
 
 for wall in row_walls:
 	print wall
