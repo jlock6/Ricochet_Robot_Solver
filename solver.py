@@ -65,77 +65,99 @@ def removeRobot(rows,columns,robot):
 
 	return
 
-def moveUp(rows,columns,robots,robot_picker):
+def moveRobot(rows,columns,robots,robot_picker,direction):
 	removeRobot(rows,columns,robots[robot_picker])
 
-	x, test_location = robots[robot_picker]
+	x_test, y_test = robots[robot_picker]
 
-	while columns[x][test_location-1] == 0:
-		test_location-=1
+	if direction==0: #Move up
 
-	robots[robot_picker] = (x,test_location)
+		while columns[x_test][y_test-1] == 0:
+			y_test-=1
+
+	elif direction==1: #Move down
+
+		while columns[x_test][y_test] == 0:
+			y_test+=1
+
+	elif direction==2: #Move left
+
+		while rows[y_test][x_test-1] == 0:
+			x_test-=1
+
+	elif direction==3: #Move right
+
+		while rows[y_test][x_test] == 0:
+			x_test+=1
+
+	robots[robot_picker] = (x_test,y_test)
 
 	addRobot(rows,columns,robots[robot_picker])
 
-	return
+# Solution
 
-def moveDown(rows,columns,robots,robot_picker):
-	removeRobot(rows,columns,robots[robot_picker])
+target_robot = 2
+target_location = (5,3)
 
-	x, test_location = robots[robot_picker]
+solved = False
+progress_tracker = [[robot_locations,[]]]
 
-	while columns[x][test_location] == 0:
-		test_location+=1
+solution_path = []
 
-	robots[robot_picker] = (x,test_location)
+while not solved:
+	current_situation = progress_tracker.pop(0)
 
-	addRobot(rows,columns,robots[robot_picker])
+	for i in range(16):
 
-	return
+		current_path = copy.deepcopy(current_situation[1])
+		current_path.append(i)
 
-def moveLeft(rows,columns,robots,robot_picker):
-	removeRobot(rows,columns,robots[robot_picker])
+		# print "Current path is " 
+		# print current_path
 
-	test_location, y = robots[robot_picker]
+		current_locations = copy.deepcopy(current_situation[0])
+		current_rows = copy.deepcopy(row_walls)
+		current_columns = copy.deepcopy(column_walls)
 
-	while rows[y][test_location-1] == 0:
-		test_location-=1
+		for robot in current_locations:
+			addRobot(current_rows,current_columns,robot)
 
-	robots[robot_picker] = (test_location,y)
+		current_path = copy.deepcopy(current_situation[1])
+		current_path.append(i)
 
-	addRobot(rows,columns,robots[robot_picker])
+		moveRobot(current_rows,current_columns,current_locations,i/4,i%4)
 
-	return	
+		if current_locations[target_robot] == target_location:
+			solved = True
+			solution_path = current_path
 
-def moveRight(rows,columns,robots,robot_picker):
-	removeRobot(rows,columns,robots[robot_picker])
+		else:
+			progress_tracker.append([current_locations,current_path])
 
-	test_location, y = robots[robot_picker]
+		if i == 15:
+			i = 0
 
-	while rows[y][test_location] == 0:
-		test_location+=1
+for i in range(len(solution_path)):
+	robot_number = solution_path[i]/4
+	direction_number = solution_path[i]%4
+	direction = ""
 
-	robots[robot_picker] = (test_location,y)
+	if direction_number==0:
+		direction = "up"
+	elif direction_number==1:
+		direction = "down"
+	elif direction_number==2:
+		direction = "left"
+	elif direction_number==3:
+		direction = "right"
 
-	addRobot(rows,columns,robots[robot_picker])
+	print "Move robot " + str(robot_number) + " " + direction
 
-	return	
 
-for robot in robot_locations:
-	addRobot(row_walls,column_walls,robot)
 
-moveRight(row_walls,column_walls,robot_locations,2)
 
-for wall in row_walls:
-	print wall
 
-print "hello"
 
-for wall in column_walls:
-	print wall
 
-print "hello"
 
-for robot in robot_locations:
-	print robot 
 
