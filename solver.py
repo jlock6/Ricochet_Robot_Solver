@@ -10,38 +10,50 @@ import copy
 
 # Keep passing shit back and forth
 
-board_size = 5
+board_size = int(raw_input("How big is the board? If 5x5, say 5. "))
 robot_count = 4
 
 #Set up row walls; index of 0 is past the top or left, off the board
 row_walls = [[0]*(board_size+1) for i in repeat(None,board_size+1)]
 
 #Set up board walls
-for i in row_walls:
-	i[0]+=1
-	i[len(i)-1]+=1
+for i in range(len(row_walls)):
+	row_walls[i][0]+=1
+	row_walls[i][len(row_walls[i])-1]+=1
 
-row_walls[2][3]+=1
-row_walls[3][1]+=1
-row_walls[4][4]+=1
+	if i >= 1:
+		str_of_walls = raw_input("For row " + str(i) + ", which cells have a wall to the right? Use spaces to separate ")
+		walls_to_add = str(str_of_walls).split()
+		walls_to_add =[int(wall) for wall in walls_to_add]
 
+		for j in range(len(walls_to_add)):
+			row_walls[i][walls_to_add[j]]+=1
 
 #Set up column walls
 column_walls = [[0]*(board_size+1) for i in repeat(None,board_size+1)]
-for i in column_walls:
-	i[0]+=1
-	i[len(i)-1]+=1
+for i in range(len(column_walls)):
+	column_walls[i][0]+=1
+	column_walls[i][len(column_walls[i])-1]+=1
 
-column_walls[2][1]+=1
-column_walls[3][4]+=1
+	if i >= 1:
+		str_of_walls = raw_input("For column " + str(i) + ", which cells have a wall to the bottom? Use spaces to separate ")
+		walls_to_add = str(str_of_walls).split()
+		walls_to_add =[int(wall) for wall in walls_to_add]
+
+
+
+		for j in range(len(walls_to_add)):
+			column_walls[i][walls_to_add[j]]+=1
 
 #Set up robots
 robot_locations = [() for i in repeat(None,robot_count)]
 
-robot_locations[0] = (1,1)
-robot_locations[1] = (4,1)
-robot_locations[2] = (2,4)
-robot_locations[3] = (4,5)
+for i in range(robot_count):
+	loc_str = raw_input("Where is robot " + str(i) + "? ")
+	loc = str(loc_str).split()
+	loc = [int(coord) for coord in loc]
+
+	robot_locations[i] = (loc[0],loc[1])
 
 def addRobot(rows,columns,robot):
 	x, y = robot
@@ -96,8 +108,12 @@ def moveRobot(rows,columns,robots,robot_picker,direction):
 
 # Solution
 
-target_robot = 2
-target_location = (5,3)
+target_robot = int(raw_input("Which robot needs to move? "))
+target_str = raw_input("Where does the target need to move? Xcoord Ycoord ")
+target = str(target_str).split()
+target = [int(coord) for coord in target]
+
+target_location = (target[0],target[1])
 
 solved = False
 progress_tracker = [[robot_locations,[]]]
